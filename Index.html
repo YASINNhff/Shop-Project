@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta  dir="ltr">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ffffff"> 
+  <title>Shop Project</title>
+  <link rel="stylesheet" href="Style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+<header class="Header flex">
+  <div class="nameOfProject flex Home">
+    <i class="fa-solid fa-shop"></i>
+    <p>Shop Project</p>
+  </div>
+  <div class="ShopLogo flex "
+  id="goToShop">
+    <p>Go To shopping cart</p>
+    <i class="fa-solid fa-cart-shopping"></i>
+  </div>
+</header>
+
+    <div class="FilterOptions">
+      <div class="FilterHeader ">
+        <p>Catalog</p>
+        <i class="fa-solid fa-sliders"></i>
+      </div>  
+      <div class="CategoryOptions">
+        <div class="Category-name flex"> 
+          <p>Category</p>
+          <i class="fa-solid fa-angle-down"></i>
+        </div>
+        <div class="item-boxes">
+          <div class="CategoryOption  item ">
+            <p>all</p>
+           </div>
+           <div class="CategoryOption item">
+            <p>men's clothing</p>
+           </div>
+           <div class="CategoryOption item">
+            <p>women's clothing</p>
+           </div>
+           <div class="CategoryOption item">
+            <p>jewelery</p>
+           </div>
+           <div class="CategoryOption item">
+            <p>electronics</p>
+        </div>
+           <div class="CategoryOption item">
+            <p>electronics</p>
+        </div>
+        </div>
+           </div>
+           <div class="CategoryOptions">
+            <div class="Category-name flex price"> 
+              <p>Price Range </p>
+              <i class="fa-solid fa-angle-down"></i>
+            </div>
+            <div class="item-boxes">
+              <div class="CategoryOption items">
+                  <div class="range-values">
+                  <span id="minValue">$150</span>
+                  <span id="maxValue">$850</span>
+                </div>
+                <div class="range-slider">
+                  <input type="range" id="minRange" min="0" max="1000" value="150">
+                  <input type="range" id="maxRange" min="0" max="1000" value="850">
+                  <div class="slider-track" id="track"></div>
+                </div>
+            </div>
+            </div>
+
+            </div>
+
+            </div>
+           
+    
+
+</div>
+<div dir="rtl" class="Products">
+  <div class="loader"></div>
+  <h3 class="Conditon-text"></h3>
+
+</div>
+<div class="toast-message "></div>
+
+<div class="shopping-cart">
+  <div class="shopping-cart-items">
+    
+   
+  </div>
+
+  <div class="accomulator-section">
+    <div class="accomulator">
+      <div class="prices">
+      
+        <div class="prices-accomulator">
+
+          <p class="products-price">109.95$ (<span class="products-counter">1</span>)</p>
+        <p class="products-Discount">0</p>
+        
+      </div>
+      
+      <div class="prices-accomulator">
+        
+        <p class="products-price-shower">products price</p>
+        <p class="products-Discount-shower">products Discount</p>
+        
+      </div>
+      
+    </div>
+    <div class="accomulator-buttons">
+     <div class="prices-accomulator final">
+       <p class="products-Total-price">109.95 $</p>
+      <p class="products-Total-price-shower">products Total price</p>
+     </div>
+        <button class="Buy_product">Buy products</button>
+        <span class="Store"><i class="fa-solid fa-arrow-right"></i>  Back To Store</span>
+      </div>
+    </div>
+  </div>
+</div>
+  <script src="main.js"></script>
+</body>
+</html>
