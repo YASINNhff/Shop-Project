@@ -78,40 +78,7 @@ const setPriceSliderRange = (products) => {
 // create a function to render products
 
 const renderProducts = (products) => {
-  CategoryMain.forEach((item) => {
-    item.addEventListener("click" , (() => {
-      // activing each icon in buttons (applying active effect)
-      
-      let itemIcon = item.children[1];
-      let itemChilds = item.nextElementSibling.children;
-      let childsArray = [...itemChilds]
-      itemIcon.classList.toggle("active");
   
-  if(itemIcon.classList.contains('active')){
-  
-    childsArray.forEach((childItem , i) => {
-      // getting height of each Child element and Add it to Number
-
-      
-
-  let itemPriceHeight = childItem.getBoundingClientRect().height;
-  number += itemPriceHeight;
-  if(childsArray.length > 1 ){
-  childItem.classList.remove("border")
-    childItem.addEventListener("click" , () => filterCategory(childItem , products , childsArray))
-  }
-
-})
-    // and at final getting and adding CSS style to Childs Container
-  item.nextElementSibling.style.height  = `${number}px`;
-  number = 0 ;
-  }
-  else{
-  item.nextElementSibling.style.height  = `0px`;
-  }
-    }))
-  
-  })
 // getting items from api with map
 
   products.map((item) => {
@@ -169,6 +136,43 @@ addToCart(selectedProduct);
 })
 
 }
+
+CategoryMain.forEach((item) => {
+  item.addEventListener("click" , (() => {
+    // activing each icon in buttons (applying active effect)
+    
+    let itemIcon = item.children[1];
+    let itemChilds = item.nextElementSibling.children;
+    let childsArray = [...itemChilds]
+    itemIcon.classList.toggle("active");
+
+if(itemIcon.classList.contains('active')){
+
+  childsArray.forEach((childItem , i) => {
+    // getting height of each Child element and Add it to Number
+
+    
+
+let itemPriceHeight = childItem.getBoundingClientRect().height;
+number += itemPriceHeight;
+if(childsArray.length > 1 ){
+childItem.classList.remove("border")
+  childItem.addEventListener("click" , () => filterCategory(childItem , globalProducts , childsArray))
+}
+
+})
+  // and at final getting and adding CSS style to Childs Container
+item.nextElementSibling.style.height  = `${number}px`;
+number = 0 ;
+}
+else{
+item.nextElementSibling.style.height  = `0px`;
+}
+  }))
+
+})
+
+
 
 const filterCategory = (item , products , childsArray) => {
   childsArray.forEach((innerItem) => {
