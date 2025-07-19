@@ -14,50 +14,55 @@ const loader = document.querySelector(".loader");
 const productsCounter = document.querySelector(".products-counter");
 const productsPrice = document.querySelector(".products-price");
 const productsTotalPrice = document.querySelector(".products-Total-price");
-const minRange = document.querySelector('#minRange');
-const maxRange = document.querySelector('#maxRange');
-const minValue = document.querySelector('#minValue');
-const maxValue = document.querySelector('#maxValue');
-const track = document.querySelector('#track');
+const minRange = document.querySelector("#minRange");
+const maxRange = document.querySelector("#maxRange");
+const minValue = document.querySelector("#minValue");
+const maxValue = document.querySelector("#maxValue");
+const track = document.querySelector("#track");
+const closeAndOpen = document.querySelector(".close-and-open");
 const gap = 100;
 let globalProducts = [];
-let number = 0 ;
+let number = 0;
 let cartData = null;
-if(localStorage.getItem("cart")){
+if (localStorage.getItem("cart")) {
   cartData = JSON.parse(localStorage.getItem("cart"));
-}else{
-  cartData = []
+} else {
+  cartData = [];
 }
 
 const getProducs = async () => {
-try{
-  let response = await fetch("https://fakestoreapi.com/products");
-  let data = await response.json();
-  loader.style.display = 'none'
-  renderProducts(data);
-  globalProducts = data;
-  setPriceSliderRange(data);
-} catch (error) {
-conditonText.textContent = error.message;
-console.log(error);
-}
-}
-goToShop.addEventListener("click" , e => shoppingCart.classList.add("show"));
-Home.addEventListener("click" , e => shoppingCart.classList.remove("show"));
-Store.addEventListener("click" , e => shoppingCart.classList.remove("show"));
-const ConvertText = (text) => {
-  let splittedtext = text.split(' ');
-  let newTitle = splittedtext[0] + splittedtext[1];
-  if(splittedtext[1] == '-' || splittedtext[1] == 'and'){
-    newTitle =  splittedtext[0] + splittedtext[1] + splittedtext[2];
+  try {
+    let response = await fetch("https://fakestoreapi.com/products");
+    let data = await response.json();
+    loader.style.display = "none";
+    renderProducts(data);
+    globalProducts = data;
+    setPriceSliderRange(data);
+  } catch (error) {
+    conditonText.textContent = error.message;
+    console.log(error);
+    loader.style.display = "none";
   }
-  return newTitle
-}
+};
+goToShop.addEventListener("click", (e) => shoppingCart.classList.add("show"));
+Home.addEventListener("click", (e) => shoppingCart.classList.remove("show"));
+Store.addEventListener("click", (e) => shoppingCart.classList.remove("show"));
+const ConvertText = (text) => {
+  let splittedtext = text.split(" ");
+  let newTitle = splittedtext[0] + splittedtext[1];
+  if (splittedtext[1] == "-" || splittedtext[1] == "and") {
+    newTitle = splittedtext[0] + splittedtext[1] + splittedtext[2];
+  }
+  return newTitle;
+};
 
 // set min and miax Price from data to  SliderRange
 const setPriceSliderRange = (products) => {
   const prices = products.map(({ price }) => price);
-  const [minPrice, maxPrice] = [Math.floor(Math.min(...prices)),Math.ceil( Math.max(...prices) ) ];
+  const [minPrice, maxPrice] = [
+    Math.floor(Math.min(...prices)),
+    Math.ceil(Math.max(...prices)),
+  ];
 
   const applyRange = (input, min, max, value) => {
     input.min = min;
@@ -74,23 +79,18 @@ const setPriceSliderRange = (products) => {
   updateSlider();
 };
 
-
 // create a function to render products
 
 const renderProducts = (products) => {
-  
-// getting items from api with map
+  // getting items from api with map
 
   products.map((item) => {
+    // destructuring object
+    const { id, image, title, price, category } = item;
 
-// destructuring object
-const {id , image , title , price , category } = item ;
-
-
-
-const productElement = document.createElement("div")
-productElement.classList.add("Product-box")
-productElement.innerHTML = `
+    const productElement = document.createElement("div");
+    productElement.classList.add("Product-box");
+    productElement.innerHTML = `
     <div class="event-options">
       <i class="fa-solid fa-heart"></i>
     </div>
@@ -106,118 +106,106 @@ productElement.innerHTML = `
       </div>
     </div>`;
 
-ProductsSection.appendChild(productElement);
+    ProductsSection.appendChild(productElement);
 
-// active like button on rightCorner of box
+    // active like button on rightCorner of box
 
- let LikeButton = productElement.querySelector(".fa-heart")
- LikeButton.addEventListener("click" , event => event.target.classList.toggle("Heartactive"))
-let addToCartButton = productElement.querySelector(".Buy");
+    let LikeButton = productElement.querySelector(".fa-heart");
+    LikeButton.addEventListener("click", (event) =>
+      event.target.classList.toggle("Heartactive")
+    );
+    let addToCartButton = productElement.querySelector(".Buy");
 
-addToCartButton.addEventListener("click" , (e) => {
-  
-  // when I Click to (Buy) Button , active toastMessage
-  
-  const toastMessage = document.querySelector(".toast-message");
-  const productId = parseInt( e.currentTarget.getAttribute("data-id"));
-  const toastContent = e.currentTarget.parentElement.previousElementSibling.previousElementSibling.textContent;
-  toastMessage.textContent = `${toastContent} Sucssesfuly Added in Basket`
-  toastMessage.classList.add("show");
-  setTimeout(() => toastMessage.classList.remove("show") , 1000);
+    addToCartButton.addEventListener("click", (e) => {
+      // when I Click to (Buy) Button , active toastMessage
 
+      const toastMessage = document.querySelector(".toast-message");
+      const productId = parseInt(e.currentTarget.getAttribute("data-id"));
+      const toastContent =
+        e.currentTarget.parentElement.previousElementSibling
+          .previousElementSibling.textContent;
+      toastMessage.textContent = `${toastContent} Sucssesfuly Added in Basket`;
+      toastMessage.classList.add("show");
+      setTimeout(() => toastMessage.classList.remove("show"), 1000);
 
-  const selectedProduct = products.find((item) =>  item.id === productId )
-addToCart(selectedProduct);
-
-})
-
-
-
-})
-
-}
+      const selectedProduct = products.find((item) => item.id === productId);
+      addToCart(selectedProduct);
+    });
+  });
+};
 
 CategoryMain.forEach((item) => {
-  item.addEventListener("click" , (() => {
+  item.addEventListener("click", () => {
     // activing each icon in buttons (applying active effect)
-    
+
     let itemIcon = item.children[1];
     let itemChilds = item.nextElementSibling.children;
-    let childsArray = [...itemChilds]
+    let childsArray = [...itemChilds];
     itemIcon.classList.toggle("active");
 
-if(itemIcon.classList.contains('active')){
+    if (itemIcon.classList.contains("active")) {
+      childsArray.forEach((childItem, i) => {
+        // getting height of each Child element and Add it to Number
 
-  childsArray.forEach((childItem , i) => {
-    // getting height of each Child element and Add it to Number
+        let itemPriceHeight = childItem.getBoundingClientRect().height;
+        number += itemPriceHeight;
+        if (childsArray.length > 1) {
+          childItem.classList.remove("border");
+          childItem.addEventListener("click", () =>
+            filterCategory(childItem, globalProducts, childsArray)
+          );
+        }
+      });
+      // and at final getting and adding CSS style to Childs Container
+      item.nextElementSibling.style.height = `${number}px`;
+      number = 0;
+    } else {
+      item.nextElementSibling.style.height = `0px`;
+    }
+  });
+});
 
-    
-
-let itemPriceHeight = childItem.getBoundingClientRect().height;
-number += itemPriceHeight;
-if(childsArray.length > 1 ){
-childItem.classList.remove("border")
-  childItem.addEventListener("click" , () => filterCategory(childItem , globalProducts , childsArray))
-}
-
-})
-  // and at final getting and adding CSS style to Childs Container
-item.nextElementSibling.style.height  = `${number}px`;
-number = 0 ;
-}
-else{
-item.nextElementSibling.style.height  = `0px`;
-}
-  }))
-
-})
-
-
-
-const filterCategory = (item , products , childsArray) => {
+const filterCategory = (item, products, childsArray) => {
   childsArray.forEach((innerItem) => {
-innerItem.classList.remove("border")
-  })
+    innerItem.classList.remove("border");
+  });
   item.classList.add("border");
-  const itemCategory =  item.children[0].innerHTML;
-const machedItmes = products.filter((clickedItem) => {
-  return itemCategory === clickedItem.category
-})
-if(itemCategory === "all"){
-  getProducs()
-}
+  const itemCategory = item.children[0].innerHTML;
+  const machedItmes = products.filter((clickedItem) => {
+    return itemCategory === clickedItem.category;
+  });
+  if (itemCategory === "all") {
+    getProducs();
+  }
 
-ProductsSection.textContent = ``
-renderProducts(machedItmes)
-
-}
+  ProductsSection.textContent = ``;
+  renderProducts(machedItmes);
+};
 const addToCart = (product) => {
-  const carItem = cartData.find((item)=> {
-  return item.id === product.id;
-  })
-if(!carItem){ cartData.push({...product , quantity : 1 });}
-else{carItem.quantity++}
+  const carItem = cartData.find((item) => {
+    return item.id === product.id;
+  });
+  if (!carItem) {
+    cartData.push({ ...product, quantity: 1 });
+  } else {
+    carItem.quantity++;
+  }
 
-
-  renderCart()
-  saveToLocaleStorage()
-
-}
+  renderCart();
+  saveToLocaleStorage();
+};
 const saveToLocaleStorage = () => {
-  localStorage.setItem("cart" , JSON.stringify(cartData))
-}
+  localStorage.setItem("cart", JSON.stringify(cartData));
+};
 const renderCart = () => {
+  shoppingCartItems.innerHTML = "";
+  if (cartData.length !== 0) {
+    cartData.map((item) => {
+      const { image, title, price, category, quantity } = item;
+      const cartElement = document.createElement("div");
+      cartElement.classList.add("shopping-cart-item");
 
-shoppingCartItems.innerHTML = '';
-if(cartData.length !== 0 ){
-
-  
-  cartData.map((item) => {
-    const { image , title , price , category , quantity } = item ;
-  const cartElement = document.createElement("div");
-  cartElement.classList.add("shopping-cart-item")
-  
-   cartElement.innerHTML =  `
+      cartElement.innerHTML = `
      <div class="image-conatiner-parent">
       <div class="item-image-container">
         <img width="50px" src="${image}" alt="${title}">
@@ -246,88 +234,74 @@ if(cartData.length !== 0 ){
   
      </div>
   
-     `
-     const increaseButton = cartElement.querySelector(".plus")
-     const decreaseButton = cartElement.querySelector(".minus")
-     const itemRemover = cartElement.querySelector(".itemRemover")
-  increaseButton.addEventListener("click" , e => IncreaseQunatity(item))
-  decreaseButton.addEventListener("click" , e => decreaseQunatity(item))
-  itemRemover.addEventListener("click" , e => itemRemoverFunc(item))
-     shoppingCartItems.appendChild(cartElement);
-
-
-  
-
-})
-}else{shoppingCartItems.innerHTML = ` 
+     `;
+      const increaseButton = cartElement.querySelector(".plus");
+      const decreaseButton = cartElement.querySelector(".minus");
+      const itemRemover = cartElement.querySelector(".itemRemover");
+      increaseButton.addEventListener("click", (e) => IncreaseQunatity(item));
+      decreaseButton.addEventListener("click", (e) => decreaseQunatity(item));
+      itemRemover.addEventListener("click", (e) => itemRemoverFunc(item));
+      shoppingCartItems.appendChild(cartElement);
+    });
+  } else {
+    shoppingCartItems.innerHTML = ` 
   <p style="
   text-align: center;
    margin-top : 2rem;
    font-weight : 500 ;
-   font-size : 20px ;">ShoppingCart Is Empty</p>`
-
-
-}
-
-// increase value when we click it
-
-const IncreaseQunatity = (item) => {
-  const cartItem = cartData.find((product) =>  item.id === product.id)
-
-  if(cartItem){
-    cartItem.quantity++;
-    renderCart();
+   font-size : 20px ;">ShoppingCart Is Empty</p>`;
   }
-}
-// decrease value when we click it
 
-const decreaseQunatity = (item) => {
-  const cartItem = cartData.find((product) =>  item.id === product.id)
+  // increase value when we click it
 
-  if(cartItem && cartItem.quantity > 1 ){
-    cartItem.quantity--;
+  const IncreaseQunatity = (item) => {
+    const cartItem = cartData.find((product) => item.id === product.id);
+
+    if (cartItem) {
+      cartItem.quantity++;
+      renderCart();
+    }
+  };
+  // decrease value when we click it
+
+  const decreaseQunatity = (item) => {
+    const cartItem = cartData.find((product) => item.id === product.id);
+
+    if (cartItem && cartItem.quantity > 1) {
+      cartItem.quantity--;
+      renderCart();
+    }
+  };
+
+  // remove item from cart when we click it
+
+  const itemRemoverFunc = (item) => {
+    const cartItem = cartData.findIndex((product) => item.id === product.id);
+    cartData.splice(cartItem, 1);
     renderCart();
-  }
-}
+    saveToLocaleStorage();
+  };
 
-// remove item from cart when we click it
-
-const itemRemoverFunc = (item) => {
-  const cartItem = cartData.findIndex((product) =>  item.id === product.id)
-cartData.splice(cartItem , 1);
-renderCart()
-saveToLocaleStorage()
-}
-
-const totalPrice = cartData.reduce((total , item) => {
- return  total + item.quantity * item.price
-    } , 0)
-    productsTotalPrice.textContent = `${totalPrice.toLocaleString()}$`;
-    productsPrice.innerHTML = `${totalPrice.toLocaleString()}$ (<span class="products-counter">1</span>)`;
-    const Counter =     productsPrice.querySelector(".products-counter");
+  const totalPrice = cartData.reduce((total, item) => {
+    return total + item.quantity * item.price;
+  }, 0);
+  productsTotalPrice.textContent = `${totalPrice.toLocaleString()}$`;
+  productsPrice.innerHTML = `${totalPrice.toLocaleString()}$ (<span class="products-counter">1</span>)`;
+  const Counter = productsPrice.querySelector(".products-counter");
   Counter.textContent = cartData.length;
-
-  
-}
-
-
+};
 
 getProducs();
 renderCart();
 
-
-
-
-
 // handeling of price range category , first we intialze it and then filter it With globalProducts (Line 23)
 
-const updateSlider = () =>  {
- 
+const updateSlider = () => {
   let min = parseInt(minRange.value);
   let max = parseInt(maxRange.value);
 
   if (max - min < gap) {
-    if (event.target.id === 'minRange') {
+    if (event.target.id === "minRange") {
       minRange.value = max - gap;
       min = max - gap;
     } else {
@@ -337,21 +311,19 @@ const updateSlider = () =>  {
   }
   minValue.textContent = `$${min}`;
   maxValue.textContent = `$${max}`;
-  
+
   const percent1 = (min / minRange.max) * 100;
   const percent2 = (max / maxRange.max) * 100;
-  
 
-  track.style.left = percent1 + '%';
-  track.style.width = (percent2 - percent1) + '%';
-}
+  track.style.left = percent1 + "%";
+  track.style.width = percent2 - percent1 + "%";
+};
 
-minRange.addEventListener('input', updateSlider);
-maxRange.addEventListener('input', updateSlider);
+minRange.addEventListener("input", updateSlider);
+maxRange.addEventListener("input", updateSlider);
 updateSlider();
 
 const PriceRange = (products) => {
-
   let min = parseInt(minRange.value);
   let max = parseInt(maxRange.value);
 
@@ -364,3 +336,22 @@ const PriceRange = (products) => {
 };
 minRange.addEventListener("change", () => PriceRange(globalProducts));
 maxRange.addEventListener("change", () => PriceRange(globalProducts));
+
+closeAndOpen.addEventListener("click" , () => {
+  closeAndOpen.classList.toggle("menuActive")
+  if(closeAndOpen.classList.contains("menuActive")){
+  closeAndOpen.firstElementChild.classList.replace("fa-close" , "fa-bars");
+  closeAndOpen.parentElement.parentElement.classList.add("active1")
+}
+  else{
+  closeAndOpen.firstElementChild.classList.replace("fa-bars" , "fa-close")
+  closeAndOpen.parentElement.parentElement.classList.remove("active1")
+
+  }
+})
+
+window.addEventListener("resize" , () => {
+if(window.innerWidth > 786 && closeAndOpen.parentElement.parentElement.classList.contains("active1")){
+  closeAndOpen.click();
+}
+  ;})
